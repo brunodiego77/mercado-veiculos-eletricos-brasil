@@ -34,7 +34,8 @@ flowchart LR
 
     F1 & F2 & F3 & F4 --> RAW
     RAW --> BRONZE --> SILVER --> GOLD
-    F5 --> GOLD ```
+    F5 --> GOLD
+ ```
 
 ### Etapas Orquestradas no Workflow (`pipeline_mercado_carros_eletricos`)
 
