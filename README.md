@@ -35,3 +35,6 @@ flowchart LR
     F1 & F2 & F3 & F4 --> RAW
     RAW --> BRONZE --> SILVER --> GOLD
     F5 --> GOLD
+
+<img width="1726" height="591" alt="Captura de tela 2026-11-25 155417" src="https://github.com/user-attachments/assets/39b3c9ce-0cb6-4d15-8c10-577948a9336e" />
+
