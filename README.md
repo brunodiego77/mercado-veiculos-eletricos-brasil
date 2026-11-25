@@ -13,33 +13,25 @@ Avaliar a viabilidade comercial e mapear oportunidades de expansão para operaç
 
 ---
 
-## 📈 Amostra dos Resultados (`gold_viabilidade_mercado_uf`)
+## 🏗️ Arquitetura da Solução (Medallion + Workflows)
 
-| UF | Estado | Regra IPVA 2026 | Emplacamentos (30m) | Frota Plug-in | Eletropostos | Carros Plug-in / Posto | Diagnóstico Estratégico |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **SP** | São Paulo | Integral (4%) | 259.130 | 124.884 | 243 | 513,9 | Forte Expansão com Gargalo de Recarga |
-| **MG** | Minas Gerais | Integral (4%) | 87.116 | 32.314 | 101 | 319,9 | Forte Expansão com Gargalo de Recarga |
-| **DF** | Distrito Federal | **Isento (0%)** | 74.790 | 38.607 | 166 | 232,6 | Alta Demanda + Incentivo Fiscal |
-| **BA** | Bahia | **Isento (0%)** | 35.550 | 20.041 | 63 | 318,1 | Alta Demanda + Incentivo Fiscal |
-| **PE** | Pernambuco | **Isento (0%)** | 30.685 | 21.101 | 34 | **620,6** | Alta Demanda + Incentivo Fiscal (Gargalo) |
-| **MT** | Mato Grosso | Integral | 14.347 | 6.919 | 4 | **1.729,8** | Gargalo Extremo de Infraestrutura |
+```mermaid
+flowchart LR
+    subgraph Fontes["📥 Fontes de Dados"]
+        F1["SENATRAN (Excel)\nFrota Circulante Out/2026"]
+        F2["ABVE / Recarregados (CSV)\nEmplacamentos 30 meses"]
+        F3["Legislação IPVA 2026 (CSV)\nRegras e Alíquotas por UF"]
+        F4["Fichas Técnicas (CSV)\nPreços e Especificações"]
+        F5["Pipeline Anterior (Delta)\ngold_estacoes_estados"]
+    end
 
----
+    subgraph Databricks["🧱 Databricks Lakehouse (Unity Catalog)"]
+        RAW["Camada RAW\n4 Tabelas Delta Brutas"]
+        BRONZE["Camada BRONZE\nTipagem, Deduplicação e Nulos"]
+        SILVER["Camada SILVER\nPadronização UF e Regras Plug-in"]
+        GOLD["Camada GOLD\ngold_viabilidade_mercado_uf\ngold_ranking_modelos_ev"]
+    end
 
-## 🛠️ Stack Tecnológica
-
-* **Plataforma:** Databricks Free Edition (Serverless Compute)
-* **Processamento & Linguagens:** PySpark, Spark SQL, Python (Pandas / OpenPyXL)
-* **Armazenamento & Governança:** Delta Lake, Unity Catalog (Volumes e Linhagem de Dados)
-* **Orquestração:** Databricks Workflows (DAG sequencial de 4 tarefas executadas em ~2 min)
-
----
-
-## 📂 Estrutura do Repositório
-
-```text
-├── 01_ingestao_raw_veiculos.ipynb      # Ingestão de CSVs e XLSX (Volumes -> Delta Raw)
-├── 02_camada_bronze_veiculos.ipynb     # Tipagem, tratamento de nulos textuais e deduplicação
-├── 03_camada_silver_veiculos.ipynb     # Padronização de UFs e classificação Plug-in vs. Híbrido
-├── 04_camada_gold_veiculos.ipynb       # Cruzamento multi-fonte, VGC estimado e matriz por UF
-└── README.md                           # Documentação técnica e insights de negócio
+    F1 & F2 & F3 & F4 --> RAW
+    RAW --> BRONZE --> SILVER --> GOLD
+    F5 --> GOLD
