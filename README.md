@@ -34,7 +34,10 @@ flowchart LR
 
     F1 & F2 & F3 & F4 --> RAW
     RAW --> BRONZE --> SILVER --> GOLD
-    F5 --> GOLD
+    F5 --> GOLD ```
 
-<img width="1726" height="591" alt="Captura de tela 2026-11-25 155417" src="https://github.com/user-attachments/assets/39b3c9ce-0cb6-4d15-8c10-577948a9336e" />
+### Etapas Orquestradas no Workflow (`pipeline_mercado_carros_eletricos`)
+
+<img width="1726" height="591" alt="Execução do Workflow Databricks" src="https://github.com/user-attachments/assets/c3a8e261-a68a-46a0-8bfd-5d4f1f5bc882" />
+
 
